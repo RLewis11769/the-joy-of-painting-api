@@ -1,14 +1,150 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 # Object structure for post requests
 class Add_Episode(BaseModel):
     """ Episode Model """
     title: str
     date: str
+    img_src: Optional[str] = None
+    youtube_src: Optional[str] = None
+    black_gesso: Optional[int] = 0
+    bright_red: Optional[int] = 0
+    burnt_umber: Optional[int] = 0
+    cadmium_yellow: Optional[int] = 0
+    dark_sienna: Optional[int] = 0
+    indian_red: Optional[int] = 0
+    indian_yellow: Optional[int] = 0
+    liquid_black: Optional[int] = 0
+    liquid_clear: Optional[int] = 0
+    midnight_black: Optional[int] = 0
+    phthalo_blue: Optional[int] = 0
+    phthalo_green: Optional[int] = 0
+    prussian_blue: Optional[int] = 0
+    sap_green: Optional[int] = 0
+    titanium_white: Optional[int] = 0
+    van_dyke_brown: Optional[int] = 0
+    yellow_ochre: Optional[int] = 0
+    alizarin_crimson: Optional[int] = 0
+    aurora_borealis: Optional[int] = 0
+    barn: Optional[int] = 0
+    beach: Optional[int] = 0
+    boat: Optional[int] = 0
+    bridge: Optional[int] = 0
+    building: Optional[int] = 0
+    bushes: Optional[int] = 0
+    cabin: Optional[int] = 0
+    cactus: Optional[int] = 0
+    cirrus: Optional[int] = 0
+    cliff: Optional[int] = 0
+    clouds: Optional[int] = 0
+    conifer: Optional[int] = 0
+    cumulus: Optional[int] = 0
+    deciduous: Optional[int] = 0
+    dock: Optional[int] = 0
+    farm: Optional[int] = 0
+    fence: Optional[int] = 0
+    fire: Optional[int] = 0
+    flowers: Optional[int] = 0
+    fog: Optional[int] = 0
+    grass: Optional[int] = 0
+    hills: Optional[int] = 0
+    lake: Optional[int] = 0
+    lighthouse: Optional[int] = 0
+    mill: Optional[int] = 0
+    moon: Optional[int] = 0
+    mountain: Optional[int] = 0
+    mountains: Optional[int] = 0
+    night: Optional[int] = 0
+    ocean: Optional[int] = 0
+    palm_trees: Optional[int] = 0
+    path: Optional[int] = 0
+    person: Optional[int] = 0
+    portrait: Optional[int] = 0
+    river: Optional[int] = 0
+    rocks: Optional[int] = 0
+    snow: Optional[int] = 0
+    snowy_mountain: Optional[int] = 0
+    structure: Optional[int] = 0
+    sun: Optional[int] = 0
+    tree: Optional[int] = 0
+    trees: Optional[int] = 0
+    waterfall: Optional[int] = 0
+    waves: Optional[int] = 0
+    windmill: Optional[int] = 0
+    winter: Optional[int] = 0
+
 
 # Object structure for put requests
 class Update_Episode(BaseModel):
     """ Episode Model """
     title: Optional[str] = None
     date: Optional[str] = None
+    img_src: Optional[str] = None
+    youtube_src: Optional[str] = None
+    black_gesso: Optional[int] = 0
+    bright_red: Optional[int] = 0
+    burnt_umber: Optional[int] = 0
+    cadmium_yellow: Optional[int] = 0
+    dark_sienna: Optional[int] = 0
+    indian_red: Optional[int] = 0
+    indian_yellow: Optional[int] = 0
+    liquid_black: Optional[int] = 0
+    liquid_clear: Optional[int] = 0
+    midnight_black: Optional[int] = 0
+    phthalo_blue: Optional[int] = 0
+    phthalo_green: Optional[int] = 0
+    prussian_blue: Optional[int] = 0
+    sap_green: Optional[int] = 0
+    titanium_white: Optional[int] = 0
+    van_dyke_brown: Optional[int] = 0
+    yellow_ochre: Optional[int] = 0
+    alizarin_crimson: Optional[int] = 0
+    aurora_borealis: Optional[int] = 0
+    barn: Optional[int] = 0
+    beach: Optional[int] = 0
+    boat: Optional[int] = 0
+    bridge: Optional[int] = 0
+    building: Optional[int] = 0
+    bushes: Optional[int] = 0
+    cabin: Optional[int] = 0
+    cactus: Optional[int] = 0
+    cirrus: Optional[int] = 0
+    cliff: Optional[int] = 0
+    clouds: Optional[int] = 0
+    conifer: Optional[int] = 0
+    cumulus: Optional[int] = 0
+    deciduous: Optional[int] = 0
+    dock: Optional[int] = 0
+    farm: Optional[int] = 0
+    fence: Optional[int] = 0
+    fire: Optional[int] = 0
+    flowers: Optional[int] = 0
+    fog: Optional[int] = 0
+    grass: Optional[int] = 0
+    hills: Optional[int] = 0
+    lake: Optional[int] = 0
+    lighthouse: Optional[int] = 0
+    mill: Optional[int] = 0
+    moon: Optional[int] = 0
+    mountain: Optional[int] = 0
+    mountains: Optional[int] = 0
+    night: Optional[int] = 0
+    ocean: Optional[int] = 0
+    palm_trees: Optional[int] = 0
+    path: Optional[int] = 0
+    person: Optional[int] = 0
+    portrait: Optional[int] = 0
+    river: Optional[int] = 0
+    rocks: Optional[int] = 0
+    snow: Optional[int] = 0
+    snowy_mountain: Optional[int] = 0
+    structure: Optional[int] = 0
+    sun: Optional[int] = 0
+    tree: Optional[int] = 0
+    trees: Optional[int] = 0
+    waterfall: Optional[int] = 0
+    waves: Optional[int] = 0
+    windmill: Optional[int] = 0
+    winter: Optional[int] = 0
