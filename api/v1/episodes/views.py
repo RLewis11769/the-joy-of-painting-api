@@ -3,6 +3,7 @@ from .models import Episode
 from .schemas import Add_Episode, Update_Episode
 from .utils import find_value, color_dict, subject_dict, month_dict
 from initiate import Session, get_db
+from typing import Optional
 
 
 router = APIRouter(
@@ -11,10 +12,43 @@ router = APIRouter(
 
 
 @router.get("/")
-def all_episodes(db: Session = Depends(get_db)):
-    """ Define GET request made to /episodes endpoint """
-    eps = db.query(Episode).all()
-    return eps
+def all_episodes(color: Optional[int] = 0,
+                 subject: Optional[int] = 0,
+                 month: Optional[int] = 0,
+                 db: Session = Depends(get_db)):
+    """ Define GET request made to /episodes endpoint (including params) """
+    # If not query params, return all episodes
+    if color == 0 and subject == 0 and month == 0:
+        return db.query(Episode).all()
+    c_filt = find_value(color_dict, color)
+    s_filt = find_value(subject_dict, subject)
+    m_filt = find_value(month_dict, month)
+    # If only color param, return all eps with color
+    if color and subject == 0 and month == 0:
+        return db.query(Episode).filter_by(**{c_filt: True}).all()
+    # If only subject param, return all eps with subject
+    if subject and color == 0 and month == 0:
+        return db.query(Episode).filter_by(**{s_filt: True}).all()
+    # If only month param, return all eps with month
+    if month and color == 0 and subject == 0:
+        return db.query(Episode).filter(Episode.date.like(f"%{m_filt}%")).all()
+    # If only color and subject params, return all eps with color and subject
+    if color and subject and month == 0:
+        return db.query(Episode).filter_by(**{c_filt: True})\
+                                .filter_by(**{s_filt: True}).all()
+    # If only color and month params, return all eps with color and month
+    if color and month and subject == 0:
+        return db.query(Episode).filter_by(**{c_filt: True})\
+                                .filter(Episode.date.like(f"%{m_filt}%")).all()
+    # If only subject and month params, return all eps with subject and month
+    if subject and month and color == 0:
+        return db.query(Episode).filter_by(**{s_filt: True})\
+                                .filter(Episode.date.like(f"%{m_filt}%")).all()
+    # If all query params, return eps that match all query params
+    if color and subject and month:
+        return db.query(Episode).filter_by(**{c_filt: True})\
+                                .filter_by(**{s_filt: True})\
+                                .filter(Episode.date.like(f"%{m_filt}%")).all()
 
 
 @router.get("/{ep_id}")
@@ -30,10 +64,11 @@ def one_episode(ep_id: int, db: Session = Depends(get_db)):
 @router.post("/{ep_id}")
 def add_episode(ep_id: int, ep: Add_Episode, db: Session = Depends(get_db)):
     """ Define POST request made to endpoint including ep_id """
-    new_ep = Episode(id=ep_id, title=ep.title, date=ep.date)
-    if new_ep:
+    check = db.query(Episode).filter_by(id=ep_id).first()
+    if check:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT,
                             detail="Episode ID already exists")
+    new_ep = Episode(id=ep_id, title=ep.title, date=ep.date)
     db.add(new_ep)
     db.commit()
     return new_ep
@@ -53,6 +88,18 @@ def update_episode(ep_id: int, ep: Update_Episode,
         episode.date = ep.date
     db.commit()
     return episode
+
+
+@router.delete("/{ep_id}")
+def delete_episode(ep_id: int, db: Session = Depends(get_db)):
+    """ Define DELETE request made to endpoint including ep_id """
+    ep = db.query(Episode).filter_by(id=ep_id).first()
+    if not ep:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Episode not found")
+    db.delete(ep)
+    db.commit()
+    return {"message": "Episode deleted"}
 
 
 @router.get("/color/{color_id}")
