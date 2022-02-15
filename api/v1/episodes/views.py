@@ -1,6 +1,6 @@
 """ Define routes/endpoints for API """
 from .models import Episode
-from .schemas import Add_Episode, Update_Episode
+from .schemas import Add_Episode
 from .utils import find_value, color_dict, subject_dict, month_dict
 from fastapi import Depends, HTTPException, APIRouter, Query, status
 from initiate import Session, get_db
