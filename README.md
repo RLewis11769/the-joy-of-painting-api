@@ -26,20 +26,27 @@ Your API must:
 
 ## Directions
 
-### 1. Clean up resources/data.txt file with:
+### 1. Install requirements with:
+```
+pip3 install -r requirements.txt
+```
+
+This should install all dependencies.
+
+### 2. Clean up resources/data.txt file with:
 ```
 python3 utils/replace.py
 ```
 
-This is because data.txt's only relevant separator data is " ( while Pandas read_csv does not allow for ( as a separator. It's probably completely doable to do this in the same step/file as ETL.
+This is because data.txt's only relevant separator data is '" (' while Pandas read_csv does not allow for '(' as a separator. It's probably completely doable to do this in the same step/file as ETL.
 
-### 2. Run application with:
+### 3. Run application with:
 ```
 uvicorn app:app --reload
 ```
 
 This will host the data on http://localhost:8000/ including creating or connecting to the bob_ross.db database. Note that there is no front end added, so the API itself is located at http://localhost:8000/api/v1/episodes and its related endpoints.
 
-### 3. If no data in database, load resource files by running ETL/ETL.ipynb file
+### 4. If no data in database, load resource files by running ETL/ETL.ipynb file
 
 If new data has been added to the database, default behavior is to "replace" data in database. Data can be appended to existing data, but note that current Episode table model does not allow for duplicate data.
