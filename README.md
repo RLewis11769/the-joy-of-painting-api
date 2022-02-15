@@ -40,13 +40,20 @@ python3 utils/replace.py
 
 This is because data.txt's only relevant separator data is '" (' while Pandas read_csv does not allow for '(' as a separator. It's probably completely doable to do this in the same step/file as ETL.
 
-### 3. Run application with:
+### 3. Run application with either:
 ```
 uvicorn app:app --reload
+uvicorn app2:app --reload
 ```
 
-This will host the data on http://localhost:8000/ including creating or connecting to the bob_ross.db database. Note that there is no front end added, so the API itself is located at http://localhost:8000/api/v1/episodes and its related endpoints.
+There are 2 versions of this project. Either will host the data on http://localhost:8000/ and FastAPI Swagger documentation is found at http://localhost:8000/docs. Note that there is no front end added, only an API. All API endpoints start with http://localhost:8000/api/v*/episodes. Only one version works at a time.
 
-### 4. If no data in database, load resource files by running ETL/ETL.ipynb file
+The first version uses boolean values for both colors and subjects and connects to the bob_ross.db database. The API endpoints are located at http://localhost:8000/api/v1/episodes and its related endpoints.
+
+The second version uses lists and connects to the happy_lil_trees.db database. The API endpoints are located at http://localhost:8000/api/v1/episodes and its related endpoints. All of its data folders and files include a "2" to differentiate.
+
+### 4. If no data in database, load resource files
+
+This is as simple as running either the ETL/ETL.ipynb **OR** ETL/ETL2.ipynb file.
 
 If new data has been added to the database, default behavior is to "replace" data in database. Data can be appended to existing data, but note that current Episode table model does not allow for duplicate data.
