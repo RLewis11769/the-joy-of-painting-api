@@ -9,8 +9,6 @@ class Episode(Base):
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(50), nullable=False, unique=True)
     date = Column(String(20), nullable=False, unique=True)
-    img_src = Column(String(50), nullable=False, default='N/A')
-    youtube_src = Column(String(50), nullable=False, default='N/A')
     black_gesso = Column(Integer, nullable=False, default=0)
     bright_red = Column(Integer, nullable=False, default=0)
     burnt_umber = Column(Integer, nullable=False, default=0)

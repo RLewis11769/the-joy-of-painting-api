@@ -1,6 +1,6 @@
 """ Define routes/endpoints for API """
 from .models import Episode
-from .schemas import Add_Episode
+from .schemas import Add_Episode, Update_Episode
 from .utils import find_value, color_dict, subject_dict, month_dict
 from fastapi import Depends, HTTPException, APIRouter, Query, status
 from initiate import Session, get_db
@@ -72,6 +72,21 @@ def add_episode(ep_id: int, ep: Add_Episode, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_ep)
     return new_ep
+
+
+@router.put("/{ep_id}")
+def update_episode(ep_id: int, ep: Update_Episode, db: Session = Depends(get_db)):
+    """ Define PUT request made to endpoint """
+    update_ep = db.query(Episode).filter_by(id=ep_id).first()
+    if not update_ep:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="Episode not found")
+    for key, value in ep.dict().items():
+        if value:
+            setattr(update_ep, key, value)
+    db.commit()
+    db.refresh(update_ep)
+    return update_ep
 
 
 @router.delete("/{ep_id}")
