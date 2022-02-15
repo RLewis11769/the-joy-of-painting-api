@@ -1,10 +1,12 @@
-from sqlalchemy import Column, Integer, String
+""" Define table models for episode table and episode instances """
 from engine.db import Base
+from sqlalchemy import Column, Integer, String
 
 
 class Episode(Base):
+    """ Episode table inherits from declarative base to define columns """
     __tablename__ = 'episodes'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     title = Column(String(50), nullable=False, unique=True)
     date = Column(String(20), nullable=False, unique=True)
     img_src = Column(String(50), nullable=False, default='N/A')
@@ -76,4 +78,5 @@ class Episode(Base):
     winter = Column(Integer, nullable=False, default=0)
 
     def __repr__(self):
+        """ Return string representation of object """
         return f'<Episode {self.title}>'

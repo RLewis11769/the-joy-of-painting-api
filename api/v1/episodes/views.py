@@ -1,28 +1,31 @@
-from fastapi import Depends, HTTPException, APIRouter, status
+""" Define routes/endpoints for API """
 from .models import Episode
 from .schemas import Add_Episode, Update_Episode
 from .utils import find_value, color_dict, subject_dict, month_dict
+from fastapi import Depends, HTTPException, APIRouter, Query, status
 from initiate import Session, get_db
 from typing import Optional
 
 
+# Router provides blueprint for all endpoints
 router = APIRouter(
     prefix="/api/v1/episodes"
 )
 
 
 @router.get("/")
-def all_episodes(color: Optional[int] = 0,
-                 subject: Optional[int] = 0,
-                 month: Optional[int] = 0,
+def all_episodes(*, color: Optional[int] = Query(0, ge=0, lt=19),
+                 subject: Optional[int] = Query(0, ge=0, lt=48),
+                 month: Optional[int] = Query(0, ge=0, le=12),
                  db: Session = Depends(get_db)):
     """ Define GET request made to /episodes endpoint (including params) """
-    # If not query params, return all episodes
+    # If no query params, return all episodes
     if color == 0 and subject == 0 and month == 0:
         return db.query(Episode).all()
     c_filt = find_value(color_dict, color)
     s_filt = find_value(subject_dict, subject)
     m_filt = find_value(month_dict, month)
+    # Note: I am aware this is a dumb way to do this
     # If only color param, return all eps with color
     if color and subject == 0 and month == 0:
         return db.query(Episode).filter_by(**{c_filt: True}).all()
@@ -63,31 +66,12 @@ def one_episode(ep_id: int, db: Session = Depends(get_db)):
 
 @router.post("/{ep_id}")
 def add_episode(ep_id: int, ep: Add_Episode, db: Session = Depends(get_db)):
-    """ Define POST request made to endpoint including ep_id """
-    check = db.query(Episode).filter_by(id=ep_id).first()
-    if check:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT,
-                            detail="Episode ID already exists")
-    new_ep = Episode(id=ep_id, title=ep.title, date=ep.date)
+    """ Define POST request made to endpoint """
+    new_ep = Episode(**ep.dict(), id=ep_id)
     db.add(new_ep)
     db.commit()
+    db.refresh(new_ep)
     return new_ep
-
-
-@router.put("/{ep_id}")
-def update_episode(ep_id: int, ep: Update_Episode,
-                   db: Session = Depends(get_db)):
-    """ Define PUT request made to endpoint including ep_id """
-    episode = db.query(Episode).filter_by(id=ep_id).first()
-    if not episode:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail="Episode not found")
-    if ep.title:
-        episode.title = ep.title
-    if ep.date:
-        episode.date = ep.date
-    db.commit()
-    return episode
 
 
 @router.delete("/{ep_id}")
@@ -112,6 +96,9 @@ def all_episodes_by_color(color_id: int,
                             detail="Color not found")
     # Search for eps within column name based on color_id
     eps = db.query(Episode).filter_by(**{column_name: True}).all()
+    if not eps:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="No episodes found")
     return eps
 
 
@@ -125,6 +112,9 @@ def all_episodes_by_subject(subject_id: int,
                             detail="Subject not found")
     # Search for eps within column name based on subject_id
     eps = db.query(Episode).filter_by(**{column_name: True}).all()
+    if not eps:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="No episodes found")
     return eps
 
 
@@ -138,4 +128,7 @@ def all_episodes_by_month(month_id: int,
                             detail="Month not found")
     # Search for eps where date column includes month based on month_id
     eps = db.query(Episode).filter(Episode.date.like(f"%{column_name}%")).all()
+    if not eps:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail="No episodes found")
     return eps
